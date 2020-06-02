@@ -13,11 +13,11 @@ path = "{bin_path}"
 
 [dependencies]
 yup-oauth2 = "^3.1"
-google_api_auth = { git = "https://github.com/google-apis-rs/generator", features = ["with-yup-oauth2"] }
+google_api_auth = { git = "https://github.com/octoml/generator", features = ["with-yup-oauth2"], branch = "octo_master" }
 clap = "^2.33"
 serde_json = "1.0.40"
 dirs = "2.0"
-google_cli_shared = { git = "https://github.com/google-apis-rs/generator", version = "0.1.0" }
+google_cli_shared = { git = "https://github.com/octoml/generator", version = "0.1.0", branch = "octo_master" }
 default-boxed = "0.1.6"
 "#;
 
