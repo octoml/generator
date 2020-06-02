@@ -1,4 +1,5 @@
 use ::std::sync::Mutex;
+use async_trait::async_trait;
 use yup_oauth2::authenticator::Authenticator;
 use hyper::client::connect::Connect;
 
@@ -25,6 +26,7 @@ impl<T> ::std::fmt::Debug for YupAuthenticator<T> {
     }
 }
 
+#[async_trait]
 impl<C> crate::GetAccessToken for YupAuthenticator<C>
 where
     C: Connect + Clone + Send + Sync + 'static,
