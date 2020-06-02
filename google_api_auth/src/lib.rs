@@ -6,7 +6,14 @@ use async_trait::async_trait;
 
 #[async_trait]
 pub trait GetAccessToken: ::std::fmt::Debug + Send + Sync {
-    async fn access_token(&self) -> Result<String, Box<dyn ::std::error::Error + Send + Sync + 'static>>;
+    // TODO(@jroesch): clean up
+    async fn async_access_token(&self) -> Result<String, Box<dyn ::std::error::Error + Send + Sync + 'static>>;
+
+    fn access_token(&self) -> Result<String, Box<dyn ::std::error::Error + Send + Sync + 'static>> {
+        let fut = self.async_access_token();
+        let mut runtime = ::tokio::runtime::Runtime::new().expect("unable to start tokio runtime");
+        Ok(runtime.block_on(fut)?.as_str().to_string())
+    }
 }
 
 impl<T> From<T> for Box<dyn GetAccessToken>

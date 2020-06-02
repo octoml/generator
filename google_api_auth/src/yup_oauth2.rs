@@ -32,7 +32,7 @@ impl<C> crate::GetAccessToken for YupAuthenticator<C>
 where
     C: Connect + Clone + Send + Sync + 'static,
 {
-    async fn access_token(&self) -> Result<String, Box<dyn ::std::error::Error + Send + Sync>> {
+    async fn async_access_token(&self) -> Result<String, Box<dyn ::std::error::Error + Send + Sync>> {
         // This is for lifetime reasons.
         let auth: Arc<_> = {
             let guard = self
