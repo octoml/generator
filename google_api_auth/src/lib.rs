@@ -6,7 +6,7 @@ use async_trait::async_trait;
 
 #[async_trait]
 pub trait GetAccessToken: ::std::fmt::Debug + Send + Sync {
-    async fn access_token(&self) -> Result<String, Box<dyn ::std::error::Error + Send + Sync>>;
+    async fn access_token(&self) -> Result<String, Box<dyn ::std::error::Error + Send + Sync + 'static>>;
 }
 
 impl<T> From<T> for Box<dyn GetAccessToken>
