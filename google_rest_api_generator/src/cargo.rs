@@ -12,8 +12,8 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 chrono = { version = "0.4", features = ["serde"] }
 reqwest = { version = "0.10", default-features = false, features = ['rustls-tls', 'blocking', 'json'] }
-google_field_selector = { git = "https://github.com/google-apis-rs/generator" }
-google_api_auth = { git = "https://github.com/google-apis-rs/generator" }
+google_field_selector = { git = "https://github.com/octoml/generator", branch = "octo_master" }
+google_api_auth = { git = "https://github.com/octoml/generator", branch = "octo_master" }
 mime = "0.3"
 textnonce = "0.6"
 percent-encoding = "2"
@@ -32,7 +32,7 @@ pub(crate) fn cargo_toml(crate_name: &str, include_bytes_dep: bool, api: &shared
 
     if include_bytes_dep {
         doc.push_str("\n[dependencies.google_api_bytes]\n");
-        doc.push_str("git = \"https://github.com/google-apis-rs/generator\"\n");
+        doc.push_str("git = \"https://github.com/octoml/generator\", branch = \"octo_master\"\n");
     }
     doc
 }
