@@ -29,14 +29,13 @@ impl<C> crate::GetAccessToken for YupAuthenticator<C>
 where
     C: Connect + Clone + Send + Sync + 'static,
 {
-    fn access_token(&self) -> Result<String, Box<dyn ::std::error::Error + Send + Sync>> {
+    async fn access_token(&self) -> Result<String, Box<dyn ::std::error::Error + Send + Sync>> {
         let auth = self
             .auth
             .lock()
             .expect("thread panicked while holding lock");
-        let fut = auth.token(&self.scopes);
-        let mut runtime = ::tokio::runtime::Runtime::new().expect("unable to start tokio runtime");
-        Ok(runtime.block_on(fut)?.as_str().to_string())
+        let tok = auth.token(&self.scopes)?;
+        Ok(tok)
     }
 }
 
