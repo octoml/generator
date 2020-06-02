@@ -2,6 +2,7 @@ use ::std::sync::Mutex;
 use async_trait::async_trait;
 use yup_oauth2::authenticator::Authenticator;
 use hyper::client::connect::Connect;
+use std::sync::Arc;
 
 pub fn from_authenticator<C, I, S>(auth: Authenticator<C>, scopes: I) -> impl crate::GetAccessToken
 where
@@ -10,13 +11,13 @@ where
     S: Into<String>,
 {
     YupAuthenticator {
-        auth: Mutex::new(auth),
+        auth: Mutex::new(Arc::new(auth)),
         scopes: scopes.into_iter().map(Into::into).collect(),
     }
 }
 
 struct YupAuthenticator<C> {
-    auth: Mutex<Authenticator<C>>,
+    auth: Mutex<Arc<Authenticator<C>>>,
     scopes: Vec<String>,
 }
 
@@ -32,12 +33,18 @@ where
     C: Connect + Clone + Send + Sync + 'static,
 {
     async fn access_token(&self) -> Result<String, Box<dyn ::std::error::Error + Send + Sync>> {
-        let auth = self
+        // This is for lifetime reasons.
+        let auth: Arc<_> = {
+            let guard = self
             .auth
             .lock()
             .expect("thread panicked while holding lock");
-        let tok = auth.token(&self.scopes)?;
-        Ok(tok)
+
+            guard.clone()
+        };
+
+        let tok = (*auth).token(&self.scopes).await?;
+        Ok(tok.as_str().into())
     }
 }
 
